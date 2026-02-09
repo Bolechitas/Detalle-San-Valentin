@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para ti ❤️</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffd1da">
+
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;700;800&family=Lora:ital@0;1&family=Black+Ops+One&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- ESTILOS ORIGINALES (TUS ESTILOS) --- */
+        :root {
+            --color-primario: #e91e63;
+            --color-secundario: #ff80ab;
+            --color-fondo-inicio: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --sombra-premium: 0 15px 35px -5px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0; padding: 0; color: #444;
+            min-height: 100vh; text-align: center;
+            overflow-x: hidden; background-color: #fff1eb;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: 50px; /* Espacio extra abajo */
+        }
+
+        h1, h2, .titulo-cursiva { font-family: 'Great Vibes', cursive; font-weight: normal; }
+        .texto-carta { font-family: 'Lora', serif; }
+
+        /* Fondo Animado */
+        .fondo-animado { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none; }
+        .corazon-flotante { position: absolute; bottom: -10%; font-size: 2rem; opacity: 0.5; animation: flotarArriba 15s linear infinite; color: rgba(255, 128, 171, 0.4); }
+        .c1 { left: 10%; animation-duration: 12s; font-size: 1.5rem; }
+        .c2 { left: 30%; animation-duration: 18s; font-size: 3rem; animation-delay: 2s; }
+        .c3 { left: 70%; animation-duration: 10s; font-size: 2rem; animation-delay: 5s; }
+        .c4 { left: 90%; animation-duration: 14s; font-size: 2.5rem; }
+        @keyframes flotarArriba { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
+
+        /* Pantallas */
+        .pantalla-full {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 999; transition: all 0.6s ease-in-out;
+            padding: 20px; box-sizing: border-box;
+        }
+
+        #pantalla-inicio { background: var(--color-fondo-inicio); }
+        .icono-latido { font-size: 6rem; animation: latido 1.2s ease-in-out infinite; filter: drop-shadow(0 5px 15px rgba(233, 30, 99, 0.4)); }
+        #pantalla-pregunta { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: none; opacity: 0; }
+
+        .btn-si {
+            background: linear-gradient(45deg, var(--color-primario), var(--color-secundario));
+            color: white; padding: 18px 50px; font-size: 1.6rem;
+            border: none; border-radius: 50px; font-weight: 800;
+            box-shadow: 0 10px 25px rgba(233, 30, 99, 0.4);
+            cursor: pointer; transition: transform 0.2s;
+            text-transform: uppercase; letter-spacing: 1px; animation: pulsoSuave 2s infinite;
+        }
+        .btn-si:active { transform: scale(0.96); }
+        .btn-no { background: #f0f0f0; color: #777; padding: 12px 30px; font-size: 1.1rem; border: 2px solid #ddd; border-radius: 50px; margin-top: 20px; font-weight: 700; }
+
+        /* Contenedor Principal */
+        .container { padding: 25px; display: none; opacity: 0; padding-bottom: 100px; position: relative; z-index: 10; animation: aparecer 1s forwards; }
+        h1.titulo-principal { color: var(--color-primario); font-size: 3.5rem; margin: 10px 0; text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8); }
+        p.intro { color: #555; font-size: 1.2rem; margin-bottom: 40px; }
+
+        /* --- NUEVOS ESTILOS AGREGADOS --- */
+        
+        /* 1. Contador */
+        .contador-container {
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 30px;
+            box-shadow: var(--sombra-premium); border: 1px solid #ffeef2;
+        }
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .timer-box { display: flex; flex-direction: column; }
+        .timer-num { font-size: 1.5rem; font-weight: 800; color: var(--color-primario); font-family: 'Nunito'; }
+        .timer-label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
+
+        /* 2. Galería de Fotos (CENTRADA) */
+        .galeria-scroll {
+            display: flex;
+            justify-content: center; /* CENTRADO EN EL MEDIO */
+            overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px;
+            padding: 10px 5px 30px 5px; margin-bottom: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .galeria-scroll::-webkit-scrollbar { display: none; }
+        
+        .foto-tarjeta {
+            scroll-snap-align: center; min-width: 240px; height: 320px;
+            background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px; transform: rotate(-2deg); transition: transform 0.3s;
+            flex-shrink: 0; /* Para que no se encojan */
+        }
+        .foto-tarjeta:nth-child(even) { transform: rotate(2deg); }
+        .foto-img { width: 100%; height: 85%; object-fit: cover; border-radius: 10px; background: #eee; }
+        .foto-caption { font-family: 'Great Vibes'; font-size: 1.6rem; color: #555; margin-top: 5px; }
+
+        /* 3. Generador de Razones */
+        .razones-container {
+            background: linear-gradient(135deg, #fff 0%, #fff5f8 100%);
+            border-radius: 20px; padding: 25px; margin: 30px 0;
+            box-shadow: var(--sombra-premium); position: relative;
+        }
+        .razon-texto { font-size: 1.2rem; font-style: italic; color: #555; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .btn-razon {
+            background: var(--color-secundario); color: white; border: none; padding: 10px 25px;
+            border-radius: 50px; font-weight: bold; margin-top: 15px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 4. Reproductor Musical */
+        .player-container {
+            background: #222; color: white; padding: 15px; border-radius: 20px;
+            display: flex; align-items: center; margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 1px solid #444;
+        }
+        .disco {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: url('https://via.placeholder.com/100?text=♫'); /* Pon tu portada si quieres */
+            background-size: cover; border: 2px solid #fff; margin-right: 15px;
+            animation: girar 3s linear infinite; animation-play-state: paused;
+        }
+        .disco.tocando { animation-play-state: running; }
+        .player-info { text-align: left; flex: 1; }
+        .player-title { font-weight: bold; font-size: 1rem; color: #ff80ab; margin: 0; }
+        .player-artist { font-size: 0.8rem; color: #aaa; margin: 0; }
+        .btn-play { background: none; border: none; font-size: 2rem; color: white; cursor: pointer; }
+
+        /* --- FIN ESTILOS NUEVOS --- */
+
+        /* Estilos de tus Vales */
+        .grid-vales { display: grid; grid-template-columns: 1fr; gap: 25px; margin-bottom: 50px; }
+        .vale {
+            border-radius: 25px; padding: 25px; position: relative;
+            box-shadow: var(--sombra-premium); overflow: hidden;
+            display: flex; align-items: center; text-align: left;
+            color: white; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer;
+        }
+        .vale:active { transform: scale(0.97); }
+
+        /* Colores */
+        .v-aventura { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .v-romantico { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
+        .v-relax { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .v-carta { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .v-hot { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #444; } .v-hot h3 { color: #d6336c !important; }
+        .v-desayuno { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #d6336c; } .v-desayuno h3 { color: #d6336c !important; }
+        .v-escapada { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #00695c; } .v-escapada h3 { color: #00695c !important; }
+        .v-si { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .v-cine { background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%); }
+        .v-razon { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #d35400; } .v-razon h3 { color: #d35400 !important; }
+        .v-offline { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #2c3e50; } .v-offline h3 { color: #2c3e50 !important; }
+        .v-capricho { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); color: #fff; }
+
+        .vale-icon-container { font-size: 3.5rem; margin-right: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
+        .vale-texto h3 { margin: 0; font-size: 1.5rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .vale-texto p { margin: 5px 0 0 0; opacity: 0.95; font-size: 1.05rem; }
+
+        .vale.canjeado { filter: grayscale(100%) brightness(0.9); box-shadow: none; pointer-events: none; background: #e0e0e0 !important; color: #777 !important; }
+        .vale.canjeado h3 { color: #777 !important; text-shadow: none; }
+        .sello {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+            font-family: 'Black Ops One', cursive; color: #c62828; font-size: 2.5rem; border: 4px dashed #c62828;
+            padding: 10px 20px; border-radius: 10px; text-transform: uppercase; mix-blend-mode: multiply; opacity: 0.8;
+            pointer-events: none; white-space: nowrap;
+        }
+        .vale.canjeado .sello { display: block; animation: estampar 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        .btn-carta { background: linear-gradient(to right, var(--color-primario), var(--color-secundario)); color: white; border: none; padding: 18px 40px; font-size: 1.3rem; border-radius: 50px; font-weight: 800; box-shadow: 0 10px 30px rgba(233, 30, 99, 0.5); cursor: pointer; width: 90%; animation: flotarSuave 4s ease-in-out infinite; letter-spacing: 1px; }
+
+        /* Modales */
+        .modal-overlay, .alert-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(40, 10, 20, 0.7); z-index: 2000; backdrop-filter: blur(6px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
+        .alert-box, .carta-container { background: white; width: 85%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: var(--sombra-premium); transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .carta-container { background: #fffdf9; background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="%23d4af37" fill-opacity="0.05"><path d="M0 0h100v100H0z"/></g></svg>'); border: 8px solid transparent; border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="%23d4af37"><path d="M10 0v10h-10v-10h10zm80 0v10h10v-10h-10zm0 80v10h10v-10h-10zm-80 0v10h-10v-10h10zm10-80h60v10h-60v-10zm60 10v60h10v-60h-10zm0 60h-60v10h60v-10zm-60-10v-60h-10v60h10z" opacity="0.4"/></svg>') 10% stretch; padding: 5px; }
+        .carta-interior { background: rgba(255,255,240, 0.9); padding: 35px 25px; border-radius: 5px; text-align: left; max-height: 70vh; overflow-y: auto; position: relative; }
+        .cerrar-modal.sello-lacre { position: absolute; top: -20px; right: -20px; width: 50px; height: 50px; line-height: 45px; text-align: center; background: linear-gradient(135deg, #c62828, #b71c1c); color: #e0a800; border-radius: 50%; font-size: 1.8rem; border: 4px solid #e57373; cursor: pointer; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.4); font-family: 'Great Vibes'; }
+        .alert-box h3 { color: var(--color-primario); font-size: 1.8rem; margin: 10px 0; }
+        .alert-btn { background: var(--color-secundario); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; flex: 1; margin: 5px; }
+        .alert-btn.cancel { background: #e0e0e0; color: #666; }
+        .alert-actions { display: flex; justify-content: center; }
+
+        @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes pulsoSuave { 0% { transform: scale(1); box-shadow: 0 10px 25px rgba(233, 30, 99, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(233, 30, 99, 0.6); } 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(233, 30, 99, 0.4); } }
+        @keyframes flotarSuave { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes estampar { 0% { transform: translate(-50%, -50%) rotate(-15deg) scale(2); opacity: 0; } 100% { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 0.8; } }
+        @keyframes aparecer { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes girar { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="fondo-animado">
+        <div class="corazon-flotante c1">❤️</div><div class="corazon-flotante c2">💖</div><div class="corazon-flotante c3">❤️</div><div class="corazon-flotante c4">💕</div>
+    </div>
+    <audio id="musica" loop><source src="cancion.mp3" type="audio/mp3"></audio>
+
+    <div id="pantalla-inicio" class="pantalla-full" onclick="irAPregunta()">
+        <div class="icono-latido">💌</div>
+        <h2 class="titulo-cursiva" style="color: white; font-size: 3rem; margin: 20px 0;">Hola mi amor</h2>
+        <p style="color: white; font-size: 1.2rem; opacity: 0.9;">Tengo una sorpresa para ti...<br>Toca la pantalla</p>
+    </div>
+
+    <div id="pantalla-pregunta" class="pantalla-full">
+        <h1 class="titulo-cursiva" style="font-size: 4rem; color: var(--color-primario); line-height: 1;">¿Quieres ser mi San Valentín? 🌹</h1>
+        <br><div style="font-size: 5rem; margin-bottom: 40px;">🥺👉👈</div>
+        <div>
+            <button class="btn-si" onclick="aceptarPropuesta()">¡SÍ, QUIERO! 😍</button><br>
+            <button id="btnNo" class="btn-no" onclick="intentarRechazar()">No, gracias</button>
+        </div>
+    </div>
+
+    <div class="container" id="contenido">
+        
+        <h1 class="titulo-principal titulo-cursiva">¡Sabía que dirías que sí!</h1>
+        <p class="intro">Eres mi persona favorita. ❤️</p>
+        
+        <div class="contador-container">
+            <div style="color: #888; margin-bottom: 5px;">Llevamos juntos:</div>
+            <div class="timer-grid">
+                <div class="timer-box"><span class="timer-num" id="t-dias">0</span><span class="timer-label">Días</span></div>
+                <div class="timer-box"><span class="timer-num" id="t-horas">0</span><span class="timer-label">Horas</span></div>
+                <div class="timer-box"><span class="timer-num" id="t-min">0</span><span class="timer-label">Min</span></div>
+                <div class="timer-box"><span class="timer-num" id="t-seg">0</span><span class="timer-label">Seg</span></div>
+            </div>
+        </div>
+
+        <h2 class="titulo-cursiva" style="color: #666; font-size: 2rem;">Momentos</h2>
+        <div class="galeria-scroll">
+            <div class="foto-tarjeta"><img src="foto1.jpg" onerror="this.src='https://via.placeholder.com/300x400/ffcfef/e91e63?text=Nuestra+Foto+1'" class="foto-img"><div class="foto-caption">Tú y Yo</div></div>
+            <div class="foto-tarjeta"><img src="foto2.JPG" onerror="this.src='https://via.placeholder.com/300x400/ffcfef/e91e63?text=Nuestra+Foto+2'" class="foto-img"><div class="foto-caption">Felicidad</div></div>
+            <div class="foto-tarjeta"><img src="foto3.JPG" onerror="this.src='https://via.placeholder.com/300x400/ffcfef/e91e63?text=Nuestra+Foto+3'" class="foto-img"><div class="foto-caption">Amor</div></div>
+        </div>
+
+        <div class="razones-container">
+            <h3 style="margin: 0 0 10px 0; color: var(--color-primario);">¿Por qué te quiero?</h3>
+            <div class="razon-texto" id="razon-texto">"Pulsa el botón..."</div>
+            <button class="btn-razon" onclick="nuevaRazon()">🎲 Dime otra razón</button>
+        </div>
+
+        <h2 class="titulo-cursiva" style="color: #666; margin-top: 30px;">Tus Regalos</h2>
+
+        <div class="grid-vales">
+            <div class="vale v-aventura" id="v_cita" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🗺️</div><div class="vale-texto"><h3>Cita Sorpresa</h3><p>Organizada 100% por mí.</p></div><div class="sello">AGOTADO</div>
+            </div>
+            
+            <div class="vale v-romantico" id="v_cena" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🕯️</div><div class="vale-texto"><h3>Cena con Velas</h3><p>Romántica. Yo cocino o invito.</p></div><div class="sello">CENADOS</div>
+            </div>
+            
+            <div class="vale v-relax" id="v_masaje" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">💆‍♀️</div><div class="vale-texto"><h3>Masaje Relax</h3><p>Largo, relajante y sin prisas.</p></div><div class="sello">RELAJADO</div>
+            </div>
+            
+            <div class="vale v-desayuno" id="v_desayuno" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🥐</div><div class="vale-texto"><h3>Desayuno Cama</h3><p>Un domingo cualquiera.</p></div><div class="sello">COMIDO</div>
+            </div>
+            
+            <div class="vale v-escapada" id="v_escapada" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🚗</div><div class="vale-texto"><h3>Escapada Finde</h3><p>Playa o montaña, tú eliges.</p></div><div class="sello">VIAJADO</div>
+            </div>
+            
+            <div class="vale v-si" id="v_dia_si" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">✅</div><div class="vale-texto"><h3>Día del "SÍ"</h3><p>Digo sí a tus planes (casi todos).</p></div><div class="sello">GASTADO</div>
+            </div>
+            
+            <div class="vale v-cine" id="v_cine" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🎬</div><div class="vale-texto"><h3>Noche de Cine</h3><p>Tú eliges peli, yo pongo snacks.</p></div><div class="sello">VISTO</div>
+            </div>
+
+             <div class="vale v-razon" id="v_razon" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🏆</div><div class="vale-texto"><h3>Tienes Razón</h3><p>Ganas una discusión. Automático.</p></div><div class="sello">GANASTE</div>
+            </div>
+
+             <div class="vale v-offline" id="v_offline" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">📵</div><div class="vale-texto"><h3>Noche Offline</h3><p>Sin móviles. Solo tú y yo.</p></div><div class="sello">OFFLINE</div>
+            </div>
+
+            <div class="vale v-capricho" id="v_capricho" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🍦</div><div class="vale-texto"><h3>Un Capricho</h3><p>Un postre, helado o regalo sorpresa.</p></div><div class="sello">DULCE</div>
+            </div>
+
+            <div class="vale v-hot" id="v_fantasia" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🔥</div><div class="vale-texto"><h3>Fantasía</h3><p>Cumpliré un deseo especial.</p></div><div class="sello">HOT 🔥</div>
+            </div>
+            
+            <div class="vale v-carta" id="v_carta_mano" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">✍️</div><div class="vale-texto"><h3>Carta a Mano</h3><p>Escrita con mi puño y letra.</p></div><div class="sello">LEÍDA</div>
+            </div>
+        </div>
+        
+        <button class="btn-carta" onclick="verCarta()">✨ Abrir Mi Carta Secreta ✨</button>
+
+        <div class="player-container">
+            <div class="disco" id="disco"></div>
+            <div class="player-info">
+                <p class="player-title">Nuestra Canción</p>
+                <p class="player-artist">Tú y Yo</p>
+            </div>
+            <button class="btn-play" onclick="togglePlay()" id="btnPlay">⏸</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalCarta">
+        <div class="carta-container">
+            <span class="cerrar-modal sello-lacre" onclick="cerrarModal('modalCarta')">X</span>
+            <div class="carta-interior">
+                <h2 class="titulo-cursiva" style="color: var(--color-primario); font-size: 2.8rem; margin-top: 10px; text-align: center;">Para ti, mi vida...</h2>
+                <p class="texto-carta" style="font-size: 1.15rem; line-height: 1.9; color: #444; padding: 0 10px;">
+                    ¡Feliz San Valentín! <br><br>
+                    Quería  añadirte de regalo algo diferente este año. Estos vales son una promesa de momentos que quiero pasar contigo .<br><br>
+                    Gracias por ser el amor de mi vida, por todo lo bueno que me das, tu sonrisa tu belleza, eres mi mundo y no podria estar mas agradecido.<br><br>
+                    ¡Te quiero muchísimo! porque sin ti mi vida ya perderia todo el sentido porque como te digo siempre eres la mujer mas hermosa del maldito mundo
+                </p>
+                <div class="texto-carta" style="text-align: right; color: var(--color-primario); font-weight: bold; margin-top: 30px; font-size: 1.3rem;">- Tuyo siempre Adrián ❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert-overlay" id="alertReject">
+        <div class="alert-box">
+            <div id="alertEmoji" style="font-size: 3rem;">😢</div>
+            <h3 id="alertTitle">Título</h3>
+            <p id="alertText">Texto</p>
+            <button class="alert-btn" onclick="cerrarAlert('alertReject')">Vale...</button>
+        </div>
+    </div>
+
+    <div class="alert-overlay" id="alertConfirm">
+        <div class="alert-box">
+            <div style="font-size: 3rem;">🎁</div>
+            <h3>¿Canjear ahora?</h3>
+            <p>¿Seguro? Si lo canjeas se marcará como usado <b>para siempre</b> en este móvil.</p>
+            <div class="alert-actions">
+                <button class="alert-btn cancel" onclick="cerrarAlert('alertConfirm')">Cancelar</button>
+                <button class="alert-btn" onclick="confirmarCanje()">¡Sí, canjear!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN ---
+        const fechaInicio = new Date("2025/01/01"); // <--- ¡CAMBIA ESTA FECHA!
+        const razones = [
+            "Por cómo me miras.", "Porque me haces reír.", "Por tu paciencia.",
+            "Porque eres mi hogar.", "Por cómo me abrazas.", "Por ser única.",
+            "Por apoyarme siempre.", "Porque te quiero."
+        ];
+
+        var contadorRechazos = 0;
+        var valeSeleccionado = null;
+        var audio = document.getElementById("musica");
+
+        // --- INICIO ---
+        function irAPregunta() {
+            audio.play().catch(e => console.log(e));
+            document.getElementById('disco').classList.add('tocando');
+            document.getElementById('pantalla-inicio').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('pantalla-inicio').style.display = 'none';
+                document.getElementById('pantalla-pregunta').style.display = 'flex';
+                setTimeout(() => document.getElementById('pantalla-pregunta').style.opacity = '1', 50);
+            }, 600);
+        }
+
+        // --- ACEPTAR / RECHAZAR ---
+        function aceptarPropuesta() {
+            // CONFETI
+            var duration = 3000; var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            document.getElementById('pantalla-pregunta').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('pantalla-pregunta').style.display = 'none';
+                document.getElementById('contenido').style.display = 'block';
+                actualizarContador(); setInterval(actualizarContador, 1000);
+            }, 500);
+        }
+
+        function intentarRechazar() {
+            contadorRechazos++;
+            var btnNo = document.getElementById('btnNo');
+            btnNo.style.transform = `scale(${1 - contadorRechazos*0.1})`;
+            var emojis = ["🤨", "😢", "💔"]; var titulos = ["¿Segura?", "¿De verdad?", "¡Auuch!"];
+            var idx = Math.min(contadorRechazos-1, 2);
+            document.getElementById('alertEmoji').innerText = emojis[idx];
+            document.getElementById('alertTitle').innerText = titulos[idx];
+            document.getElementById('alertText').innerText = "Por favor di que sí...";
+            if (contadorRechazos >= 3) btnNo.style.display = 'none';
+            abrirModal('alertReject');
+        }
+
+        // --- SISTEMA DE MEMORIA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const vales = document.querySelectorAll('.vale');
+            vales.forEach(vale => {
+                if(localStorage.getItem(vale.id) === 'usado') marcarComoUsadoVisualmente(vale);
+            });
+        });
+
+        function prepararCanje(elemento) {
+            if (elemento.classList.contains('canjeado')) return; 
+            valeSeleccionado = elemento;
+            abrirModal('alertConfirm');
+        }
+
+        function confirmarCanje() {
+            if (valeSeleccionado) {
+                localStorage.setItem(valeSeleccionado.id, 'usado');
+                marcarComoUsadoVisualmente(valeSeleccionado);
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                cerrarModal('alertConfirm');
+                valeSeleccionado = null;
+            }
+        }
+
+        function marcarComoUsadoVisualmente(elemento) {
+            elemento.classList.add('canjeado'); elemento.onclick = null;
+        }
+
+        // --- EXTRAS ---
+        function actualizarContador() {
+            const diff = new Date() - fechaInicio;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / 1000 / 60) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            document.getElementById('t-dias').innerText = d; document.getElementById('t-horas').innerText = h;
+            document.getElementById('t-min').innerText = m; document.getElementById('t-seg').innerText = s;
+        }
+
+        function nuevaRazon() {
+            const r = razones[Math.floor(Math.random() * razones.length)];
+            const el = document.getElementById('razon-texto');
+            el.style.opacity = 0;
+            setTimeout(() => { el.innerText = `"${r}"`; el.style.opacity = 1; }, 300);
+        }
+
+        function togglePlay() {
+            if(audio.paused) {
+                audio.play(); document.getElementById('disco').classList.add('tocando');
+                document.getElementById('btnPlay').innerText = "⏸";
+            } else {
+                audio.pause(); document.getElementById('disco').classList.remove('tocando');
+                document.getElementById('btnPlay').innerText = "▶";
+            }
+        }
+
+        // --- MODALES ---
+        function abrirModal(id) {
+            const modal = document.getElementById(id); modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; modal.children[0].style.transform = 'scale(1)'; }, 10);
+        }
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.opacity = '0'; modal.children[0].style.transform = 'scale(0.8)';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+        function cerrarAlert(id) { cerrarModal(id); }
+        function verCarta() { abrirModal('modalCarta'); }
+    </script>
+</body>
+</html>

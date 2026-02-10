@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- ESTILOS ORIGINALES (TUS ESTILOS) --- */
+        /* --- ESTILOS --- */
         :root {
             --color-primario: #e91e63;
             --color-secundario: #ff80ab;
@@ -28,7 +28,7 @@
             min-height: 100vh; text-align: center;
             overflow-x: hidden; background-color: #fff1eb;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 50px; /* Espacio extra abajo */
+            padding-bottom: 50px;
         }
 
         h1, h2, .titulo-cursiva { font-family: 'Great Vibes', cursive; font-weight: normal; }
@@ -72,8 +72,6 @@
         h1.titulo-principal { color: var(--color-primario); font-size: 3.5rem; margin: 10px 0; text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8); }
         p.intro { color: #555; font-size: 1.2rem; margin-bottom: 40px; }
 
-        /* --- NUEVOS ESTILOS AGREGADOS --- */
-        
         /* 1. Contador */
         .contador-container {
             background: white; border-radius: 20px; padding: 20px; margin-bottom: 30px;
@@ -87,7 +85,7 @@
         /* 2. Galería de Fotos (CENTRADA) */
         .galeria-scroll {
             display: flex;
-            justify-content: center; /* CENTRADO EN EL MEDIO */
+            justify-content: center;
             overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px;
             padding: 10px 5px 30px 5px; margin-bottom: 10px;
             -webkit-overflow-scrolling: touch;
@@ -98,7 +96,7 @@
             scroll-snap-align: center; min-width: 240px; height: 320px;
             background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             padding: 10px; transform: rotate(-2deg); transition: transform 0.3s;
-            flex-shrink: 0; /* Para que no se encojan */
+            flex-shrink: 0;
         }
         .foto-tarjeta:nth-child(even) { transform: rotate(2deg); }
         .foto-img { width: 100%; height: 85%; object-fit: cover; border-radius: 10px; background: #eee; }
@@ -125,7 +123,7 @@
         }
         .disco {
             width: 50px; height: 50px; border-radius: 50%;
-            background: url('https://via.placeholder.com/100?text=♫'); /* Pon tu portada si quieres */
+            background: url('https://via.placeholder.com/100?text=♫');
             background-size: cover; border: 2px solid #fff; margin-right: 15px;
             animation: girar 3s linear infinite; animation-play-state: paused;
         }
@@ -135,9 +133,7 @@
         .player-artist { font-size: 0.8rem; color: #aaa; margin: 0; }
         .btn-play { background: none; border: none; font-size: 2rem; color: white; cursor: pointer; }
 
-        /* --- FIN ESTILOS NUEVOS --- */
-
-        /* Estilos de tus Vales */
+        /* Estilos Vales */
         .grid-vales { display: grid; grid-template-columns: 1fr; gap: 25px; margin-bottom: 50px; }
         .vale {
             border-radius: 25px; padding: 25px; position: relative;
@@ -147,7 +143,6 @@
         }
         .vale:active { transform: scale(0.97); }
 
-        /* Colores */
         .v-aventura { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .v-romantico { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
         .v-relax { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
@@ -249,53 +244,18 @@
         <h2 class="titulo-cursiva" style="color: #666; margin-top: 30px;">Tus Regalos</h2>
 
         <div class="grid-vales">
-            <div class="vale v-aventura" id="v_cita" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🗺️</div><div class="vale-texto"><h3>Cita Sorpresa</h3><p>Organizada 100% por mí.</p></div><div class="sello">AGOTADO</div>
-            </div>
-            
-            <div class="vale v-romantico" id="v_cena" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🕯️</div><div class="vale-texto"><h3>Cena con Velas</h3><p>Romántica. Yo cocino o invito.</p></div><div class="sello">CENADOS</div>
-            </div>
-            
-            <div class="vale v-relax" id="v_masaje" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">💆‍♀️</div><div class="vale-texto"><h3>Masaje Relax</h3><p>Largo, relajante y sin prisas.</p></div><div class="sello">RELAJADO</div>
-            </div>
-            
-            <div class="vale v-desayuno" id="v_desayuno" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🥐</div><div class="vale-texto"><h3>Desayuno Cama</h3><p>Un domingo cualquiera.</p></div><div class="sello">COMIDO</div>
-            </div>
-            
-            <div class="vale v-escapada" id="v_escapada" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🚗</div><div class="vale-texto"><h3>Escapada Finde</h3><p>Playa o montaña, tú eliges.</p></div><div class="sello">VIAJADO</div>
-            </div>
-            
-            <div class="vale v-si" id="v_dia_si" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">✅</div><div class="vale-texto"><h3>Día del "SÍ"</h3><p>Digo sí a tus planes (casi todos).</p></div><div class="sello">GASTADO</div>
-            </div>
-            
-            <div class="vale v-cine" id="v_cine" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🎬</div><div class="vale-texto"><h3>Noche de Cine</h3><p>Tú eliges peli, yo pongo snacks.</p></div><div class="sello">VISTO</div>
-            </div>
-
-             <div class="vale v-razon" id="v_razon" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🏆</div><div class="vale-texto"><h3>Tienes Razón</h3><p>Ganas una discusión. Automático.</p></div><div class="sello">GANASTE</div>
-            </div>
-
-             <div class="vale v-offline" id="v_offline" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">📵</div><div class="vale-texto"><h3>Noche Offline</h3><p>Sin móviles. Solo tú y yo.</p></div><div class="sello">OFFLINE</div>
-            </div>
-
-            <div class="vale v-capricho" id="v_capricho" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🍦</div><div class="vale-texto"><h3>Un Capricho</h3><p>Un postre, helado o regalo sorpresa.</p></div><div class="sello">DULCE</div>
-            </div>
-
-            <div class="vale v-hot" id="v_fantasia" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">🔥</div><div class="vale-texto"><h3>Fantasía</h3><p>Cumpliré un deseo especial.</p></div><div class="sello">HOT 🔥</div>
-            </div>
-            
-            <div class="vale v-carta" id="v_carta_mano" onclick="prepararCanje(this)">
-                <div class="vale-icon-container">✍️</div><div class="vale-texto"><h3>Carta a Mano</h3><p>Escrita con mi puño y letra.</p></div><div class="sello">LEÍDA</div>
-            </div>
+            <div class="vale v-aventura" id="v_cita" onclick="prepararCanje(this)"><div class="vale-icon-container">🗺️</div><div class="vale-texto"><h3>Cita Sorpresa</h3><p>Organizada 100% por mí.</p></div><div class="sello">AGOTADO</div></div>
+            <div class="vale v-romantico" id="v_cena" onclick="prepararCanje(this)"><div class="vale-icon-container">🕯️</div><div class="vale-texto"><h3>Cena con Velas</h3><p>Romántica. Yo cocino o invito.</p></div><div class="sello">CENADOS</div></div>
+            <div class="vale v-relax" id="v_masaje" onclick="prepararCanje(this)"><div class="vale-icon-container">💆‍♀️</div><div class="vale-texto"><h3>Masaje Relax</h3><p>Largo, relajante y sin prisas.</p></div><div class="sello">RELAJADO</div></div>
+            <div class="vale v-desayuno" id="v_desayuno" onclick="prepararCanje(this)"><div class="vale-icon-container">🥐</div><div class="vale-texto"><h3>Desayuno Cama</h3><p>Un domingo cualquiera.</p></div><div class="sello">COMIDO</div></div>
+            <div class="vale v-escapada" id="v_escapada" onclick="prepararCanje(this)"><div class="vale-icon-container">🚗</div><div class="vale-texto"><h3>Escapada Finde</h3><p>Playa o montaña, tú eliges.</p></div><div class="sello">VIAJADO</div></div>
+            <div class="vale v-si" id="v_dia_si" onclick="prepararCanje(this)"><div class="vale-icon-container">✅</div><div class="vale-texto"><h3>Día del "SÍ"</h3><p>Digo sí a tus planes (casi todos).</p></div><div class="sello">GASTADO</div></div>
+            <div class="vale v-cine" id="v_cine" onclick="prepararCanje(this)"><div class="vale-icon-container">🎬</div><div class="vale-texto"><h3>Noche de Cine</h3><p>Tú eliges peli, yo pongo snacks.</p></div><div class="sello">VISTO</div></div>
+            <div class="vale v-razon" id="v_razon" onclick="prepararCanje(this)"><div class="vale-icon-container">🏆</div><div class="vale-texto"><h3>Tienes Razón</h3><p>Ganas una discusión. Automático.</p></div><div class="sello">GANASTE</div></div>
+            <div class="vale v-offline" id="v_offline" onclick="prepararCanje(this)"><div class="vale-icon-container">📵</div><div class="vale-texto"><h3>Noche Offline</h3><p>Sin móviles. Solo tú y yo.</p></div><div class="sello">OFFLINE</div></div>
+            <div class="vale v-capricho" id="v_capricho" onclick="prepararCanje(this)"><div class="vale-icon-container">🍦</div><div class="vale-texto"><h3>Un Capricho</h3><p>Un postre, helado o regalo sorpresa.</p></div><div class="sello">DULCE</div></div>
+            <div class="vale v-hot" id="v_fantasia" onclick="prepararCanje(this)"><div class="vale-icon-container">🔥</div><div class="vale-texto"><h3>Fantasía</h3><p>Cumpliré un deseo especial.</p></div><div class="sello">HOT 🔥</div></div>
+            <div class="vale v-carta" id="v_carta_mano" onclick="prepararCanje(this)"><div class="vale-icon-container">✍️</div><div class="vale-texto"><h3>Carta a Mano</h3><p>Escrita con mi puño y letra.</p></div><div class="sello">LEÍDA</div></div>
         </div>
         
         <button class="btn-carta" onclick="verCarta()">✨ Abrir Mi Carta Secreta ✨</button>
@@ -348,8 +308,11 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN ---
-        const fechaInicio = new Date("2025/01/01"); // <--- ¡CAMBIA ESTA FECHA!
+        // --- ⚠️⚠️ TU ID DE JSONBLOB YA CONFIGURADO ⚠️⚠️ ---
+        const BLOB_ID = "019c47e7-498c-7b5a-b593-dc70804467e0"; 
+        // -------------------------------------------------------------
+        
+        const fechaInicio = new Date("2025/01/01"); 
         const razones = [
             "Por cómo me miras.", "Porque me haces reír.", "Por tu paciencia.",
             "Porque eres mi hogar.", "Por cómo me abrazas.", "Por ser única.",
@@ -359,8 +322,83 @@
         var contadorRechazos = 0;
         var valeSeleccionado = null;
         var audio = document.getElementById("musica");
+        var valesEstado = {}; // Memoria local de la nube
 
-        // --- INICIO ---
+        // --- SISTEMA DE NUBE (JSONBLOB) ---
+        const urlBlob = `https://jsonblob.com/api/jsonBlob/${BLOB_ID}`;
+
+        // 1. Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(urlBlob)
+                .then(response => response.json())
+                .then(data => {
+                    valesEstado = data || {}; // Guardamos lo que hay en la nube
+                    actualizarInterfaz(); // Pintamos los gastados
+                })
+                .catch(error => console.log("Error cargando nube", error));
+        });
+
+        // 2. Pintar los vales gastados
+        function actualizarInterfaz() {
+            const vales = document.querySelectorAll('.vale');
+            vales.forEach(vale => {
+                if(valesEstado[vale.id] === true) {
+                    marcarComoUsadoVisualmente(vale);
+                }
+            });
+        }
+
+        // 3. Guardar en la Nube
+        function guardarEnNube(idVale) {
+            valesEstado[idVale] = true; // Actualizamos memoria local
+            
+            fetch(urlBlob, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(valesEstado)
+            }).then(() => console.log("Guardado en nube"));
+        }
+
+        function prepararCanje(elemento) {
+            if (elemento.classList.contains('canjeado')) return; 
+            valeSeleccionado = elemento;
+            abrirModal('alertConfirm');
+        }
+
+        function confirmarCanje() {
+            if (valeSeleccionado) {
+                // 1. Marcar visualmente ya
+                marcarComoUsadoVisualmente(valeSeleccionado);
+                
+                // 2. Guardar en internet
+                guardarEnNube(valeSeleccionado.id);
+                
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                cerrarModal('alertConfirm');
+                valeSeleccionado = null;
+            }
+        }
+
+        function marcarComoUsadoVisualmente(elemento) {
+            elemento.classList.add('canjeado');
+            elemento.onclick = null;
+        }
+
+        // --- RESTO DE FUNCIONES ---
+        function abrirModal(id) {
+            const modal = document.getElementById(id); modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; modal.children[0].style.transform = 'scale(1)'; }, 10);
+        }
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.opacity = '0'; modal.children[0].style.transform = 'scale(0.8)';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+        function cerrarAlert(id) { cerrarModal(id); }
+
         function irAPregunta() {
             audio.play().catch(e => console.log(e));
             document.getElementById('disco').classList.add('tocando');
@@ -372,9 +410,8 @@
             }, 600);
         }
 
-        // --- ACEPTAR / RECHAZAR ---
         function aceptarPropuesta() {
-            // CONFETI
+            // Confeti
             var duration = 3000; var end = Date.now() + duration;
             (function frame() {
                 confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
@@ -403,35 +440,6 @@
             abrirModal('alertReject');
         }
 
-        // --- SISTEMA DE MEMORIA ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const vales = document.querySelectorAll('.vale');
-            vales.forEach(vale => {
-                if(localStorage.getItem(vale.id) === 'usado') marcarComoUsadoVisualmente(vale);
-            });
-        });
-
-        function prepararCanje(elemento) {
-            if (elemento.classList.contains('canjeado')) return; 
-            valeSeleccionado = elemento;
-            abrirModal('alertConfirm');
-        }
-
-        function confirmarCanje() {
-            if (valeSeleccionado) {
-                localStorage.setItem(valeSeleccionado.id, 'usado');
-                marcarComoUsadoVisualmente(valeSeleccionado);
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                cerrarModal('alertConfirm');
-                valeSeleccionado = null;
-            }
-        }
-
-        function marcarComoUsadoVisualmente(elemento) {
-            elemento.classList.add('canjeado'); elemento.onclick = null;
-        }
-
-        // --- EXTRAS ---
         function actualizarContador() {
             const diff = new Date() - fechaInicio;
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -458,18 +466,6 @@
                 document.getElementById('btnPlay').innerText = "▶";
             }
         }
-
-        // --- MODALES ---
-        function abrirModal(id) {
-            const modal = document.getElementById(id); modal.style.display = 'flex';
-            setTimeout(() => { modal.style.opacity = '1'; modal.children[0].style.transform = 'scale(1)'; }, 10);
-        }
-        function cerrarModal(id) {
-            const modal = document.getElementById(id);
-            modal.style.opacity = '0'; modal.children[0].style.transform = 'scale(0.8)';
-            setTimeout(() => { modal.style.display = 'none'; }, 300);
-        }
-        function cerrarAlert(id) { cerrarModal(id); }
         function verCarta() { abrirModal('modalCarta'); }
     </script>
 </body>

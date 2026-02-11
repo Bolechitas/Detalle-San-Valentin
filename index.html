@@ -308,11 +308,15 @@
     </div>
 
     <script>
-        // --- ⚠️⚠️ TU ID DE JSONBLOB YA CONFIGURADO ⚠️⚠️ ---
-        const BLOB_ID = "7fdb6770-fd00-48d5-a348-b27bfda66d91"; 
-        // -------------------------------------------------------------
+        // --- CONFIGURACIÓN DE PANTRY (YA PUESTO) ---
+        const PANTRY_ID = "7fdb6770-fd00-48d5-a348-b27bfda66d91";
+        // ---------------------------------------------
         
+        // Configuración
         const fechaInicio = new Date("2025/01/01"); 
+        const bucketName = "SanValentinRegalo"; // Nombre de la cesta
+        const urlPantry = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/${bucketName}`;
+
         const razones = [
             "Por cómo me miras.", "Porque me haces reír.", "Por tu paciencia.",
             "Porque eres mi hogar.", "Por cómo me abrazas.", "Por ser única.",
@@ -322,42 +326,47 @@
         var contadorRechazos = 0;
         var valeSeleccionado = null;
         var audio = document.getElementById("musica");
-        var valesEstado = {}; // Memoria local de la nube
+        var valesEstado = {}; // Aquí guardaremos qué vales están gastados
 
-        // --- SISTEMA DE NUBE (JSONBLOB) ---
-        const urlBlob = `https://jsonblob.com/api/jsonBlob/${BLOB_ID}`;
-
+        // --- SISTEMA DE NUBE (CLOUD) ---
+        
         // 1. Cargar datos al iniciar
         document.addEventListener('DOMContentLoaded', () => {
-            fetch(urlBlob)
-                .then(response => response.json())
+            fetch(urlPantry)
+                .then(response => {
+                    if (!response.ok) throw new Error("Cesta vacía o error");
+                    return response.json();
+                })
                 .then(data => {
-                    valesEstado = data || {}; // Guardamos lo que hay en la nube
+                    valesEstado = data; // Guardamos lo que hay en la nube
                     actualizarInterfaz(); // Pintamos los gastados
                 })
-                .catch(error => console.log("Error cargando nube", error));
+                .catch(error => {
+                    console.log("Creando cesta nueva...", error);
+                    // Si falla la primera vez, intentamos crearla guardando un estado vacío
+                    guardarEnNube();
+                });
         });
 
-        // 2. Pintar los vales gastados
+        // 2. Función para pintar los vales gastados
         function actualizarInterfaz() {
             const vales = document.querySelectorAll('.vale');
             vales.forEach(vale => {
+                // Si en la nube dice true, lo marcamos
                 if(valesEstado[vale.id] === true) {
                     marcarComoUsadoVisualmente(vale);
                 }
             });
         }
 
-        // 3. Guardar en la Nube
+        // 3. Función para Guardar en la Nube
         function guardarEnNube(idVale) {
-            valesEstado[idVale] = true; // Actualizamos memoria local
+            if(idVale) valesEstado[idVale] = true; // Actualizamos memoria local
             
-            fetch(urlBlob, {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+            // Enviamos a la nube
+            fetch(urlPantry, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(valesEstado)
             }).then(() => console.log("Guardado en nube"));
         }
@@ -387,7 +396,7 @@
             elemento.onclick = null;
         }
 
-        // --- RESTO DE FUNCIONES ---
+        // --- RESTO DE FUNCIONES (VISUALES) ---
         function abrirModal(id) {
             const modal = document.getElementById(id); modal.style.display = 'flex';
             setTimeout(() => { modal.style.opacity = '1'; modal.children[0].style.transform = 'scale(1)'; }, 10);
@@ -470,4 +479,3 @@
     </script>
 </body>
 </html>
-

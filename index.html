@@ -82,7 +82,7 @@
         .timer-num { font-size: 1.5rem; font-weight: 800; color: var(--color-primario); font-family: 'Nunito'; }
         .timer-label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
 
-        /* 2. Galería de Fotos (CENTRADA) */
+        /* 2. Galería de Fotos */
         .galeria-scroll {
             display: flex;
             justify-content: center;
@@ -256,6 +256,12 @@
             <div class="vale v-capricho" id="v_capricho" onclick="prepararCanje(this)"><div class="vale-icon-container">🍦</div><div class="vale-texto"><h3>Un Capricho</h3><p>Un postre, helado o regalo sorpresa.</p></div><div class="sello">DULCE</div></div>
             <div class="vale v-hot" id="v_fantasia" onclick="prepararCanje(this)"><div class="vale-icon-container">🔥</div><div class="vale-texto"><h3>Fantasía</h3><p>Cumpliré un deseo especial.</p></div><div class="sello">HOT 🔥</div></div>
             <div class="vale v-carta" id="v_carta_mano" onclick="prepararCanje(this)"><div class="vale-icon-container">✍️</div><div class="vale-texto"><h3>Carta a Mano</h3><p>Escrita con mi puño y letra.</p></div><div class="sello">LEÍDA</div></div>
+            
+            <div class="vale v-aventura" id="v_airbnb" onclick="prepararCanje(this)">
+                <div class="vale-icon-container">🏡</div>
+                <div class="vale-texto"><h3>Finde Airbnb</h3><p>Casa rural o apartamento solo para dos.</p></div>
+                <div class="sello">RESERVADO</div>
+            </div>
         </div>
         
         <button class="btn-carta" onclick="verCarta()">✨ Abrir Mi Carta Secreta ✨</button>
@@ -479,3 +485,4 @@
     </script>
 </body>
 </html>
+
